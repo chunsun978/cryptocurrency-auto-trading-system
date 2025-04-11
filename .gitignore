@@ -11,7 +11,6 @@ cmake_install.cmake
 CMakeFiles/
 *.cmake
 *.log
-*.json
 *.txt
 *.out
 *.bin
