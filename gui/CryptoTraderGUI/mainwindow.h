@@ -37,5 +37,6 @@ private:
     QTimer *timer;
     QLabel *priceLabel;
     QLabel *balanceLabel;
+    QLabel *signalLabel;
 };
 #endif

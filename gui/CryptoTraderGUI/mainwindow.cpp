@@ -18,7 +18,6 @@ MainWindow::MainWindow(QWidget *parent)
     auto chart = new QtCharts::QChart();
     chart->addSeries(series);
 
-    // Setup axes
     QtCharts::QValueAxis *axisX = new QtCharts::QValueAxis();
     axisX->setTitleText("Days");
     axisX->setLabelFormat("%i");
@@ -40,11 +39,12 @@ MainWindow::MainWindow(QWidget *parent)
     QVBoxLayout *layout = new QVBoxLayout(centralWidget);
     layout->addWidget(chartView);
 
-    // Add price and balance labels
     priceLabel = new QLabel("Latest Price: $0", this);
     balanceLabel = new QLabel("Balance: $1000", this);
+    signalLabel = new QLabel("Signal: Hold", this); // Initialize signal label
     layout->addWidget(priceLabel);
     layout->addWidget(balanceLabel);
+    layout->addWidget(signalLabel);
 
     QPushButton *buyButton = new QPushButton("Buy", this);
     QPushButton *sellButton = new QPushButton("Sell", this);
@@ -52,11 +52,9 @@ MainWindow::MainWindow(QWidget *parent)
     layout->addWidget(sellButton);
     setCentralWidget(centralWidget);
 
-    // Connect signals
     connect(buyButton, &QPushButton::clicked, this, &MainWindow::onBuyClicked);
     connect(sellButton, &QPushButton::clicked, this, &MainWindow::onSellClicked);
 
-    // Setup timer for price updates
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &MainWindow::updatePrices);
     timer->start(60000); // Update every minute
@@ -95,8 +93,11 @@ void MainWindow::updatePrices()
         // Update labels
         priceLabel->setText(QString("Latest Price: $%1").arg(prices.back()));
         balanceLabel->setText(QString("Balance: $%1").arg(trader.getBalance()));
+        std::string signal = strategy.analyze(prices);
+        signalLabel->setText(QString("Signal: %1").arg(QString::fromStdString(signal)));
 
         logger.log("Price updated: " + priceLabel->text().toStdString());
+        logger.log("Signal updated: " + signal);
     }
     else
     {
@@ -112,6 +113,7 @@ void MainWindow::onBuyClicked()
         std::string signal = strategy.analyze(prices);
         trader.executeTrade("buy", prices.back());
         balanceLabel->setText(QString("Balance: $%1").arg(trader.getBalance()));
+        signalLabel->setText(QString("Signal: %1").arg(QString::fromStdString(signal)));
         logger.log("Buy clicked, Signal: " + signal + ", Price: " + std::to_string(prices.back()) +
                    ", Balance: " + std::to_string(trader.getBalance()));
     }
@@ -125,6 +127,7 @@ void MainWindow::onSellClicked()
         std::string signal = strategy.analyze(prices);
         trader.executeTrade("sell", prices.back());
         balanceLabel->setText(QString("Balance: $%1").arg(trader.getBalance()));
+        signalLabel->setText(QString("Signal: %1").arg(QString::fromStdString(signal)));
         logger.log("Sell clicked, Signal: " + signal + ", Price: " + std::to_string(prices.back()) +
                    ", Balance: " + std::to_string(trader.getBalance()));
     }
