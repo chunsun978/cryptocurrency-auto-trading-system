@@ -1,0 +1,31 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug CryptoTraderGUI",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/gui/CryptoTraderGUI/build/CryptoTraderGUI",
+            "args": [],
+            "stopAtEntry": true,
+            "cwd": "${workspaceFolder}/gui/CryptoTraderGUI/build",
+            "environment": [
+                {
+                    "name": "XDG_RUNTIME_DIR",
+                    "value": "/run/user/1000"
+                }
+            ],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "Build CryptoTraderGUI",
+            "miDebuggerPath": "/usr/bin/gdb"
+        }
+    ]
+}
