@@ -1,8 +1,9 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-
 #include <QMainWindow>
 #include <QtCharts/QChartView>
+#include <QtCharts/QLineSeries>
+#include <QtCharts/QDateTimeAxis> // Add for date axis
 #include <QLabel>
 #include "../../include/DataFetcher.hpp"
 #include "../../include/StrategyEngine.hpp"
@@ -34,9 +35,12 @@ private:
     TradeSimulator trader;
     Logger logger;
     QtCharts::QChartView *chartView;
+    QtCharts::QLineSeries *series;
     QTimer *timer;
     QLabel *priceLabel;
     QLabel *balanceLabel;
     QLabel *signalLabel;
+    QLabel *highestPriceLabel;
+    QLabel *lowestPriceLabel;
 };
 #endif

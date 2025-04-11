@@ -17,7 +17,8 @@ int main()
 
         while (true)
         {
-            auto prices = fetcher.getPriceHistory("bitcoin", 30);
+            // auto prices = fetcher.getPriceHistory("bitcoin", 30);
+            auto prices = fetcher.getPriceHistory("bitcoin", 91);
             if (prices.empty())
             {
                 logger.log("Error: Failed to fetch price data");

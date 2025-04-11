@@ -3,24 +3,24 @@
 StrategyEngine::StrategyEngine(int shortPeriod, int longPeriod)
     : shortPeriod_(shortPeriod), longPeriod_(longPeriod) {}
 
-double StrategyEngine::calculateMA(int period, int endIndex, const std::vector<double> &prices)
+double StrategyEngine::calculateMA(int period, int endIndex, const std::vector<std::pair<double, int64_t>> &priceData)
 {
     if (endIndex < period - 1)
         return 0.0;
     double sum = 0.0;
     for (int i = endIndex - period + 1; i <= endIndex; ++i)
     {
-        sum += prices[i];
+        sum += priceData[i].first; // Extract price from pair
     }
     return sum / period;
 }
 
-std::string StrategyEngine::analyze(const std::vector<double> &prices)
+std::string StrategyEngine::analyze(const std::vector<std::pair<double, int64_t>> &priceData)
 {
-    if (prices.size() < longPeriod_)
+    if (priceData.size() < longPeriod_)
         return "hold";
-    double shortMA = calculateMA(shortPeriod_, prices.size() - 1, prices);
-    double longMA = calculateMA(longPeriod_, prices.size() - 1, prices);
+    double shortMA = calculateMA(shortPeriod_, priceData.size() - 1, priceData);
+    double longMA = calculateMA(longPeriod_, priceData.size() - 1, priceData);
     if (shortMA == 0.0 || longMA == 0.0)
         return "hold";
     if (shortMA > longMA)
