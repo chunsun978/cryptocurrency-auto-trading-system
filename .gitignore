@@ -1,0 +1,25 @@
+# Ignore build directories at any level
+build/
+**/build/
+**/build/**
+
+# Ignore specific build-related files
+*.o
+*.o.d
+CMakeCache.txt
+cmake_install.cmake
+CMakeFiles/
+*.cmake
+*.log
+*.json
+*.txt
+*.out
+*.bin
+
+# Ignore Qt Creator specific files
+*.pro.user
+*.qmake.stash
+
+# Ignore temporary files
+*.swp
+*~
