@@ -7,12 +7,20 @@
             "request": "launch",
             "program": "${workspaceFolder}/gui/CryptoTraderGUI/build/CryptoTraderGUI",
             "args": [],
-            "stopAtEntry": true,
+            "stopAtEntry": false,
             "cwd": "${workspaceFolder}/gui/CryptoTraderGUI/build",
             "environment": [
                 {
                     "name": "XDG_RUNTIME_DIR",
                     "value": "/run/user/1000"
+                },
+                {
+                    "name": "DISPLAY",
+                    "value": "localhost:11.0"
+                },
+                {
+                    "name": "QT_LOGGING_RULES",
+                    "value": "qt5ct.debug=true;qt5ct.warning=true"
                 }
             ],
             "externalConsole": false,
