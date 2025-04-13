@@ -1,7 +1,8 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.16)
 
 project(CryptoTraderGUI VERSION 0.1 LANGUAGES CXX)
 
+# Use Qt's auto tools
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
@@ -9,14 +10,16 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Find Qt (support both Qt5 and Qt6)
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Charts)
+# Set path to your manually built Qt
+set(CMAKE_PREFIX_PATH "/opt/qt6.9.0")
 
-# Find OpenSSL for httplib
+# Find Qt6 modules
+find_package(Qt6 REQUIRED COMPONENTS Widgets Charts)
+
+# Find OpenSSL (used by cpp-httplib in your backend)
 find_package(OpenSSL REQUIRED)
 
-# Define project sources, including backend files
+# Define source files
 set(PROJECT_SOURCES
     main.cpp
     mainwindow.cpp
@@ -28,64 +31,41 @@ set(PROJECT_SOURCES
     ../../src/Logger.cpp
 )
 
-# Qt6-specific executable setup
-if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(CryptoTraderGUI
-        MANUAL_FINALIZATION
-        ${PROJECT_SOURCES}
-    )
-else()
-    # Qt5 setup, with Android support
-    if(ANDROID)
-        add_library(CryptoTraderGUI SHARED
-            ${PROJECT_SOURCES}
-        )
-    else()
-        add_executable(CryptoTraderGUI
-            ${PROJECT_SOURCES}
-        )
-    endif()
-endif()
+# Add the executable
+add_executable(CryptoTraderGUI ${PROJECT_SOURCES})
 
-# Include directories for backend headers
+# Include directories for your own code
 target_include_directories(CryptoTraderGUI PRIVATE
     ../../include
 )
 
-# Define CPPHTTPLIB_OPENSSL_SUPPORT for httplib
+# Compile definitions
 target_compile_definitions(CryptoTraderGUI PRIVATE
     CPPHTTPLIB_OPENSSL_SUPPORT
 )
 
-# Link libraries: Qt Widgets, Charts, and OpenSSL
+# Link to Qt and OpenSSL
 target_link_libraries(CryptoTraderGUI PRIVATE
-    Qt${QT_VERSION_MAJOR}::Widgets
-    Qt${QT_VERSION_MAJOR}::Charts
+    Qt6::Widgets
+    Qt6::Charts
     OpenSSL::SSL
     OpenSSL::Crypto
 )
 
-# Qt-specific properties for macOS/iOS bundling
-if(${QT_VERSION} VERSION_LESS 6.1.0)
-    set(BUNDLE_ID_OPTION MACOSX_BUNDLE_GUI_IDENTIFIER com.example.CryptoTraderGUI)
+# Optional macOS settings (ignored on Linux)
+if(APPLE)
+    set_target_properties(CryptoTraderGUI PROPERTIES
+        MACOSX_BUNDLE_GUI_IDENTIFIER com.example.CryptoTraderGUI
+        MACOSX_BUNDLE TRUE
+        MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
+        MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
+    )
 endif()
-set_target_properties(CryptoTraderGUI PROPERTIES
-    ${BUNDLE_ID_OPTION}
-    MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
-    MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
-    MACOSX_BUNDLE TRUE
-    WIN32_EXECUTABLE TRUE
-)
 
-# Installation rules
+# Install rules
 include(GNUInstallDirs)
 install(TARGETS CryptoTraderGUI
     BUNDLE DESTINATION .
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
-
-# Finalize Qt6 executable
-if(QT_VERSION_MAJOR EQUAL 6)
-    qt_finalize_executable(CryptoTraderGUI)
-endif()

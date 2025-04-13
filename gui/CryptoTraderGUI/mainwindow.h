@@ -1,14 +1,20 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-#include <QMainWindow>
-#include <QtCharts/QChartView>
 #include <QtCharts/QLineSeries>
-#include <QtCharts/QDateTimeAxis> // Add for date axis
+#include <QtCharts/QChartView>
+#include <QtCharts/QChart>
+
+
+#include <QMainWindow>
+// #include <QtCharts/QChartView>
+// #include <QtCharts/QLineSeries>
+// #include <QtCharts/QDateTimeAxis> // Add for date axis
 #include <QLabel>
 #include "../../include/DataFetcher.hpp"
 #include "../../include/StrategyEngine.hpp"
 #include "../../include/TradeSimulator.hpp"
 #include "../../include/Logger.hpp"
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui
@@ -24,23 +30,28 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 private slots:
-    void updatePrices();
-    void onBuyClicked();
-    void onSellClicked();
+    void on_buyButton_clicked();
+    void on_sellButton_clicked();
+    // void updatePrices();
+    // void onBuyClicked();
+    // void onSellClicked();
 
 private:
     Ui::MainWindow *ui;
-    DataFetcher fetcher;
-    StrategyEngine strategy;
-    TradeSimulator trader;
-    Logger logger;
-    QtCharts::QChartView *chartView;
-    QtCharts::QLineSeries *series;
-    QTimer *timer;
-    QLabel *priceLabel;
-    QLabel *balanceLabel;
-    QLabel *signalLabel;
-    QLabel *highestPriceLabel;
-    QLabel *lowestPriceLabel;
+    QLineSeries *priceSeries;
+    double balance;
+
+    // DataFetcher fetcher;
+    // StrategyEngine strategy;
+    // TradeSimulator trader;
+    // Logger logger;
+    // QtCharts::QChartView *chartView;
+    // QtCharts::QLineSeries *series;
+    // QTimer *timer;
+    // QLabel *priceLabel;
+    // QLabel *balanceLabel;
+    // QLabel *signalLabel;
+    // QLabel *highestPriceLabel;
+    // QLabel *lowestPriceLabel;
 };
 #endif
