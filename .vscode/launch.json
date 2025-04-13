@@ -29,7 +29,7 @@
                     "text": "break main"
                 }
             ],
-            "preLaunchTask": "Build CryptoTraderGUI",
+            // "preLaunchTask": "Build CryptoTraderGUI",
             "logging": {
                 "engineLogging": true,
                 "trace": true,

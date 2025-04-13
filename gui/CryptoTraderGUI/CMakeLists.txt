@@ -13,8 +13,13 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Set path to your manually built Qt
 set(CMAKE_PREFIX_PATH "/opt/qt6.9.0")
 
+set(CMAKE_BUILD_TYPE Debug)
+
 # Find Qt6 modules
 find_package(Qt6 REQUIRED COMPONENTS Widgets Charts)
+
+# Debug: Print Qt6Charts include directories
+message("Qt6Charts_INCLUDE_DIRS: ${Qt6Charts_INCLUDE_DIRS}")
 
 # Find OpenSSL (used by cpp-httplib in your backend)
 find_package(OpenSSL REQUIRED)
@@ -34,9 +39,11 @@ set(PROJECT_SOURCES
 # Add the executable
 add_executable(CryptoTraderGUI ${PROJECT_SOURCES})
 
-# Include directories for your own code
+# Include directories for your own code and QtCharts
 target_include_directories(CryptoTraderGUI PRIVATE
     ../../include
+    ${Qt6Charts_INCLUDE_DIRS}
+    /opt/qt6.9.0/include/QtCharts  # Explicitly add QtCharts include path
 )
 
 # Compile definitions
